@@ -1,0 +1,7 @@
+name: HorrorPlugin
+version: 0.0.1
+main: com.bybyzyanka.main.HorrorPlugin
+depend: [WorldGuard, WorldEdit]
+authors: [ bybyzyanka ]
+description: This is a test plugin which was made by bybyzyanka for getting the opportunity to provide commercial services (Gravit Launcher Discord Server)
+website: vk.com/kai9595
