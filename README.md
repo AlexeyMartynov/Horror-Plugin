@@ -10,3 +10,4 @@ This is a test plugin which was made by bybyzyanka for getting the opportunity t
 - Applying the "glow" effect in any way cancels the blindness effect, but only for the duration of the "glow" and does not apply to players in the district.
 
 API used: Bukkit, WorldGuard, WorldEdit
+Tested Minecraft Version - 1.12.2
