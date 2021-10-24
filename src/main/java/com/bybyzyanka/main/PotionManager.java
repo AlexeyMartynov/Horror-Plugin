@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PotionManager {
-	
+
 	// I had to implement a check for PotionEffect like this, because my API does not have an EntityPotionEffectEvent
 	
 	public PotionManager() 
