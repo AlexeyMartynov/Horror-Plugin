@@ -1,5 +1,6 @@
 package com.bybyzyanka.main;
 
+import com.bybyzyanka.horror.HorrorHandler;
 import org.bukkit.Bukkit;
 
 public class TimeManager {
@@ -16,11 +17,12 @@ public class TimeManager {
 		        if(HorrorPlugin.getMainWorld().getTime() >= 13000) 
 		        {
 		        	if(!night) night = true;
-		        	
-	        		HorrorPlugin.getListenerManager().horrorHandler.onNight();
+
+					HorrorHandler handler = HorrorPlugin.getListenerManager().horrorHandler;
+					handler.glowstoneUse();
+	        		handler.onNight();
 		        }
 		        else if(night) night = false;
-		        	
 		    }
 		}, 0, 40); 
 	}

@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class PotionManager {
 
-	// Пришлось реализовывать проверку на PotionEffect так, тк в моем API нет EntityPotionEffectEvent (Spigot 1.12.2)
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ PotionEffect пїЅпїЅпїЅ, пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ API пїЅпїЅпїЅ EntityPotionEffectEvent (Spigot 1.12.2)
 	
 	public PotionManager() 
 	{
@@ -17,9 +17,9 @@ public class PotionManager {
 		    	if(HorrorPlugin.getTimeManager().isNight()) 
 		    	{
 		    		for(Player player : Bukkit.getOnlinePlayers())
-		    			HorrorPlugin.getListenerManager().horrorHandler.removeBlindess(player);
+		    			HorrorPlugin.getListenerManager().horrorHandler.removeBlindness(player);
 		    	}	
 		    }
-		}, 0, 40);
+		}, 0, 20);
 	}
 }

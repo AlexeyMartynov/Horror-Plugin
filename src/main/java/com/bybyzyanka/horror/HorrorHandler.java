@@ -1,10 +1,11 @@
 package com.bybyzyanka.horror;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -17,26 +18,56 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class HorrorHandler implements Listener {
-	
+
+	public ConcurrentMap<String, Integer> glowstoneUsers = new ConcurrentHashMap<>();
+
 	public void onNight() 
 	{
 		for(Player player : Bukkit.getOnlinePlayers()) 
-		{ 
-			if(player.hasPotionEffect(PotionEffectType.GLOWING)) continue;
-			
-			Set<ProtectedRegion> regions = HorrorPlugin.getWorldGuard().getRegionContainer().get(HorrorPlugin.getMainWorld()).getApplicableRegions(player.getLocation()).getRegions();
+		{
+			if(isGlowstoneUser(player.getName())) continue;
+
+			Location location = player.getLocation();
+			if(player.hasPotionEffect(PotionEffectType.GLOWING)
+					|| location.distance(HorrorPlugin.getMainWorld().getSpawnLocation()) < 100) continue;
+
+			Set<ProtectedRegion> regions = HorrorPlugin.getWorldGuard().getRegionContainer().get(HorrorPlugin.getMainWorld()).getApplicableRegions(location).getRegions();
 			LocalPlayer localPlayer = HorrorPlugin.getWorldGuard().wrapPlayer(player);
 			if(regions.stream().anyMatch(region -> region.isMember(localPlayer) || region.isOwner(localPlayer))) continue;
 			
 			if(!takeGlowstone(player))
-				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 440, 5));
-			else player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 440, 5));
+			{
+				if(player.hasPotionEffect(PotionEffectType.BLINDNESS))
+					player.removePotionEffect(PotionEffectType.BLINDNESS);
+
+				player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 80, 5));
+			}
 		}
 	}
-	
-	public void removeBlindess(Player player) 
+
+	public void glowstoneUse()
 	{
-		if(player.hasPotionEffect(PotionEffectType.BLINDNESS) && player.hasPotionEffect(PotionEffectType.GLOWING))
+		for(String nick : glowstoneUsers.keySet())
+		{
+			int left = glowstoneUsers.get(nick) - 1;
+			if(left <= 0)
+			{
+				glowstoneUsers.remove(nick);
+				break;
+			}
+
+			glowstoneUsers.put(nick, left);
+		}
+	}
+
+	private boolean isGlowstoneUser(String nick)
+	{
+		return glowstoneUsers.get(nick) == null ? false : true;
+	}
+
+	public void removeBlindness(Player player)
+	{
+		if(player.hasPotionEffect(PotionEffectType.BLINDNESS) && player.hasPotionEffect(PotionEffectType.GLOWING) || isGlowstoneUser(player.getName()))
 			player.removePotionEffect(PotionEffectType.BLINDNESS);
 	}
 		
@@ -51,10 +82,9 @@ public class HorrorHandler implements Listener {
 			players.add(value);
 		}
 
-		
 		for(Player player : players) 
 		{
-			if(player.getLocation().distance(taker.getLocation()) > 10.0D) continue;
+			if(player != taker && player.getLocation().distance(taker.getLocation()) > 10.0D) continue;
 			
 			ItemStack[] contents = player.getInventory().getContents();
 			for(int slot = 0; slot < contents.length; slot++) 
@@ -69,6 +99,7 @@ public class HorrorHandler implements Listener {
 					else item.setAmount(item.getAmount() - 1);
 					
 					player.getInventory().setContents(contents);
+					glowstoneUsers.put(player.getName(), 10);
 					return true;
 				}
 			}
