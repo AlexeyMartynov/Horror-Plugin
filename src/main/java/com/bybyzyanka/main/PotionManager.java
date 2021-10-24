@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class PotionManager {
-
-	// �������� ������������� �������� �� PotionEffect ���, �� � ���� API ��� EntityPotionEffectEvent (Spigot 1.12.2)
+	
+	// I had to implement a check for PotionEffect like this, because my API does not have an EntityPotionEffectEvent
 	
 	public PotionManager() 
 	{
